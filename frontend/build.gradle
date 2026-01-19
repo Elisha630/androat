@@ -1,0 +1,24 @@
+plugins {
+    id 'base'
+}
+
+task npmInstall(type: Exec) {
+    inputs.file 'package.json'
+    outputs.dir 'node_modules'
+    commandLine 'npm', 'install'
+}
+
+task npmBuild(type: Exec) {
+    inputs.dir 'public'
+    inputs.dir 'src'
+    inputs.file 'package.json'
+    dependsOn npmInstall
+    commandLine 'npm', 'run', 'build'
+    outputs.dir 'build'
+}
+
+artifacts {
+    archives(file('build')) {
+        builtBy npmBuild
+    }
+}
